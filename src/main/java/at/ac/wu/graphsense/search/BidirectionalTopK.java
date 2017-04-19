@@ -69,20 +69,12 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
                 int mapvb = 0;
                 Collection<List<TraversalEdge<V, E>>> f = ff.get(FORWARD).aix.values();
                 for(List<TraversalEdge<V,E>> x : f) {
-                    for (TraversalEdge<V,E> te : x) {
-                        System.out.println(Util.format(te.iterator()));
-                    }
                     mapvf = mapvf +  x.size();
                 }
                 Collection<List<TraversalEdge<V, E>>> b = ff.get(BACKWARD).aix.values();
                 for(List<TraversalEdge<V,E>> x : b) {
-                    for (TraversalEdge<V,E> te : x) {
-                        System.out.println(Util.format(te.iterator()));
-                    }
                     mapvb = mapvb + x.size();
                 }
-
-
 
                 for( SearchProgressListener l : listeners ){
                     if(!l.onAdvance(forw, backw, mapvf, mapvb)){

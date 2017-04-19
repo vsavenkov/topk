@@ -19,7 +19,6 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
 
     public final HDT hdt;
     public final org.rdfhdt.hdt.dictionary.Dictionary dict;
-    final long maxValidVertex;
 
     private static final TripleComponentRole[] TRCOMP;
 
@@ -35,7 +34,6 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
             hdt = indexed ? HDTManager.loadIndexedHDT(dataset, null)
                     : HDTManager.loadHDT(dataset, null);
             dict = hdt.getDictionary();
-            maxValidVertex = dict.getNshared();
         }
         catch( IOException ex ){
             throw new RuntimeException(ex);
@@ -45,7 +43,6 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
     public HDTGraphIndex( HDT hdt ){
         this.hdt = hdt;
         this.dict = hdt.getDictionary();
-        maxValidVertex = dict.getNshared();
     }
 
     public Iterator<Edge<Integer,Integer>> lookupEdges(Integer source, Integer target){
@@ -58,7 +55,14 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
         }
 
         TripleID tripleid = new TripleID(source, 0, target);
-        IteratorTripleID result = hdt.getTriples().search(tripleid);
+        IteratorTripleID result = null;
+
+        try {
+            result = hdt.getTriples().search(tripleid);
+        }
+        catch(IndexOutOfBoundsException ex){
+
+        }
 
         return result!=null? new TripleIterator(result, source.equals(0)) :
                 new EmptyTripleIterator();
@@ -159,9 +163,6 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
                 }
                 int vertex = fetchSubjects ? tid.getSubject() : tid.getObject();
 
-                if (vertex > maxValidVertex) {
-                    continue;
-                }
                 e = new EdgeInt();
                 e.label = tid.getPredicate();
                 e.vertex = vertex;
