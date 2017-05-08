@@ -2,6 +2,7 @@ package at.ac.wu.graphsense.search.patheval;
 
 import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.GraphIndex;
+import at.ac.wu.graphsense.search.pathexpr.PathExpr;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 
@@ -17,14 +18,14 @@ public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
     Character otherChar = 'b';
 
-    String reString;
+    PathExpr<V,E> pe;
     RegExp re;
 
     RunAutomaton atForward;
     RunAutomaton atBackward;
 
-    public RegExpPathArbiter(String regExp) {
-        this.reString = regExp;
+    public RegExpPathArbiter(PathExpr<V,E> pathExpr) {
+        this.pe = pathExpr;
     }
 
 
@@ -48,7 +49,7 @@ public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
         Map<String,Character> labelEncodings = new HashMap<>();
 
         Matcher m = Pattern.compile(edgePattern())
-                .matcher(reString);
+                .matcher(pe.toString());
 
         while (m.find()) {
             String edgeLabel = m.group();
@@ -71,7 +72,7 @@ public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
         }
 
         m = Pattern.compile(sbPattern.toString())
-                .matcher(reString);
+                .matcher(pe.toString());
 
         StringBuffer sb = new StringBuffer();
 

@@ -1,10 +1,9 @@
 package at.ac.wu.graphsense.search;
 
 import at.ac.wu.graphsense.Edge;
-import at.ac.wu.graphsense.HDTGraphIndex;
+import at.ac.wu.graphsense.hdt.search.HDTGraphIndex;
 import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;
-import org.rdfhdt.hdt.dictionary.*;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.exceptions.NotFoundException;
 import java.io.File;

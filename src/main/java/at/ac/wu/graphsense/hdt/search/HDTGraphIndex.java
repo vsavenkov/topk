@@ -1,7 +1,7 @@
-package at.ac.wu.graphsense;
+package at.ac.wu.graphsense.hdt.search;
 
+import at.ac.wu.graphsense.*;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
-import org.rdfhdt.hdt.exceptions.NotFoundException;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.IteratorTripleID;
@@ -9,7 +9,6 @@ import org.rdfhdt.hdt.triples.TripleID;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
