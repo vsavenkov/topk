@@ -234,11 +234,15 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
                 Iterator<Edge<V,E>> edges = backward? gix.lookupEdges(null, e.vertex())
                                                     : gix.lookupEdges(e.vertex(), null);
+                boolean fork = false;
                 while (edges.hasNext()) {
                     Edge<V,E> sprout = edges.next();
-                    PathArbiter.PathDecision pd = arb.rankEdge(sprout, this, rank, backward );
 
-                    if( pd!=PathArbiter.PathDecision.PRUNE && !visitedEdge(e.vertex(),sprout) ) {
+                    fork = fork || edges.hasNext();
+
+                    CumulativeRank rank = arb.rankEdge(sprout, this, this.rank, fork, backward );
+
+                    if( !rank.prune() && !visitedEdge(e.vertex(),sprout) ) {
                         TraversalEdge<V,E> te = new TraversalEdge<>();
                         te.init(sprout, this, new CumulativeRank(), backward);
                         es.add(te);

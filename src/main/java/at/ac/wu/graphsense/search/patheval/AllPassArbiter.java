@@ -8,17 +8,19 @@ import at.ac.wu.graphsense.GraphIndex;
  */
 public class AllPassArbiter<V,E> implements PathArbiter<V,E> {
 
+    static final CumulativeRank _r = new CumulativeRank(CumulativeRank.MAX);
+
     public void init(GraphIndex<V,E> gi, V source, V target, boolean bidirectional){}
 
-    public PathDecision rankEdge(Edge<V,E> edge, Iterable<Edge<V,E>> path
-            , CumulativeRank rank, boolean backwardPath ){
-        rank.setRank(MAX_RANK_DEFAULT);
-        return PathDecision.FOLLOW;
+    public CumulativeRank rankEdge(Edge<V,E> edge, Iterable<Edge<V,E>> path
+            , CumulativeRank rank, boolean forkRankObject, boolean backwardPath )
+    {
+        return _r;
     }
 
     public double composeRanks( Iterable<Edge<V,E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V,E>> suffix, CumulativeRank suffixRank )
     {
-        return MAX_RANK_DEFAULT;
+        return CumulativeRank.MAX;
     }
 }
 

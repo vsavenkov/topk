@@ -10,10 +10,6 @@ import at.ac.wu.graphsense.search.patheval.CumulativeRank;
 
 public interface PathArbiter<V,E> {
 
-    enum PathDecision { PRUNE, FOLLOW }
-
-    double MAX_RANK_DEFAULT = 1, MIN_RANK_DEFAULT = 0;
-
     /**
      *
      * @param gi GraphIndex interface to the graph. Could be tested for support of the <code>Dictionary</code> interface
@@ -38,13 +34,14 @@ public interface PathArbiter<V,E> {
      *
      * @param edge Current edge to be evaluated
      * @param path The previous path (preceding <code>edge</code>)
-     * @param rank In/Out: the rank of the last edge in <code>path</code>
+     * @param pathRank In: the rank of the last edge in <code>path</code>
+     * @param forkRankObject In: if <code>pathRank</code> needs to be cloned, or the same object can be returned
      * @param backwardPath <code>true</code> if unwinding the paths from target to source, <code>false</code> otherwise.
      *                     Can only be <code>true</code> if <code>init</code> method was successfully called with the
      *                     <code>bidirectional</code> parameter set to <code>true</code>.
-     * @return A recommendation to prune or to further unfold all paths starting with (i.e., prefixed by) <code>path.edge</code>
+     * @return A rank of the path <code>path.edge</code>. Negative rank means pruning.
      */
-     PathDecision rankEdge(Edge<V,E> edge, Iterable<Edge<V,E>> path, CumulativeRank rank, boolean backwardPath );
+     CumulativeRank rankEdge(Edge<V,E> edge, Iterable<Edge<V,E>> path, CumulativeRank pathRank, boolean forkRankObject, boolean backwardPath );
 
     /**
      *  Evaluate the rank of the path <code>prefix.suffix</code> given the respective ranks of the prefix and of the suffix.
