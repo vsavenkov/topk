@@ -3,15 +3,12 @@ package at.ac.wu.graphsense.search.patheval;
 import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.GraphIndex;
 import at.ac.wu.graphsense.search.pathexpr.*;
-import com.sun.org.apache.regexp.internal.RE;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
+public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
     Map<E,Character> edgeMap = new HashMap<>();
 
@@ -130,7 +127,6 @@ public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
         }
     }
-
 
 }
 

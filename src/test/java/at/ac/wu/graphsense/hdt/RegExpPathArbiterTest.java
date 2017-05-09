@@ -1,10 +1,16 @@
-package at.ac.wu.graphsense.search;
+package at.ac.wu.graphsense.hdt;
 
 import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.TestUtil;
+import at.ac.wu.graphsense.search.BidirectionalTopK;
 import at.ac.wu.graphsense.search.patheval.RegExpPathArbiter;
+import at.ac.wu.graphsense.search.pathexpr.PathExpr;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.sparql.path.Path;
+import org.apache.jena.sparql.path.PathCompiler;
+import org.apache.jena.sparql.path.PathParser;
 import org.junit.Test;
-import org.rdfhdt.hdt.enums.TripleComponentRole;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,25 +38,15 @@ public class RegExpPathArbiterTest {
             return;
         }
 
+        Model m = ModelFactory.createDefaultModel();
+        m.setNsPrefix("",TestUtil.NAMESPACE);
+
+        Path p = PathParser.parse(":"+TestUtil.PREDICATE+"*", m);
+
+        PathExpr<Integer,Integer> pathExpr = PathExprFactory.createPathExpr( p, g.edict );
+
         // Algorithm seems to be OK
-
-        RegExpPathArbiter rpa = new RegExpPathArbiter(null) {
-            @Override
-            protected String edgePattern() {
-                return "([a-zA-Z0-9]*:[a-zA-Z0-9]*)";
-            }
-
-            @Override
-            protected Object parseEdgeLabel (String edgeLabel){
-                try{
-                    return g.dict.stringToId(edgeLabel, TripleComponentRole.PREDICATE);
-                }
-                catch( Exception ex ){
-
-                }
-                return null;
-            }
-        };
+        RegExpPathArbiter rpa = new RegExpPathArbiter(pathExpr);
 
         rpa.init(g.gix,g.start,g.target,true);
 
@@ -65,17 +61,7 @@ public class RegExpPathArbiterTest {
     @Test
     public void genericRE_label_star2() throws Exception {
 
-        RegExpPathArbiter rpa = new RegExpPathArbiter(null) {
-            @Override
-            protected String edgePattern() {
-                return super.edgePattern();
-            }
-
-            @Override
-            protected Object parseEdgeLabel (String edgeLabel){
-                return super.edgePattern();
-            }
-        };
+        RegExpPathArbiter rpa = new RegExpPathArbiter(null);
 
         assertTrue(true);
     }

@@ -113,26 +113,23 @@ public class TestUtil {
     public static class Graph
     {
         public HDT hdt;
-        public Dictionary dict;
-        public GraphIndex<Integer,Integer> gix;
+                public GraphIndex<Integer,Integer> gix;
+        public VertexDictionary<Integer,String> vdict;
+        public EdgeDictionary<Integer,String> edict;
 
         public int start = -1, target = -1, edge = -1, numPaths = 0;
 
         public Graph(String spec, int numPaths)
         {
             hdt = TestUtil.createVertexLabeledGraph(spec);
-            dict = hdt.getDictionary();
-            gix = new HDTGraphIndex(hdt);
+            HDTGraphIndex hdtgix = new HDTGraphIndex(hdt);
+            gix = hdtgix;
+            vdict = hdtgix;
+            edict = hdtgix;
 
-            start = dict.stringToId(TestUtil.QSOURCE, TripleComponentRole.SUBJECT);
-            target = dict.stringToId(TestUtil.QTARGET, TripleComponentRole.SUBJECT);
-            edge = dict.stringToId(TestUtil.QPREDICATE, TripleComponentRole.PREDICATE);
-
-            _log.debug( spec );
-            _log.debug("Total elements: " + dict.getNumberOfElements());
-            _log.debug("Start ("+start+") " + dict.idToString(start, TripleComponentRole.SUBJECT));
-            _log.debug("Target ("+target+"): " + dict.idToString(target, TripleComponentRole.SUBJECT));
-            _log.debug("Link: " + dict.idToString(edge, TripleComponentRole.PREDICATE));
+            start = vdict.vertexKey(TestUtil.QSOURCE, Edge.Component.SOURCE);
+            start = vdict.vertexKey(TestUtil.QTARGET, Edge.Component.TARGET);
+            edge = edict.edgeKey(TestUtil.QPREDICATE);
 
             this.numPaths = numPaths;
         }
