@@ -125,7 +125,7 @@ public class Multipath<V,E> implements Iterable<Path<V,E>> {
 
 
     /**
-     * @return Edge-agnostic path
+     * @return Link-agnostic path
      */
     public Path getVertexPath()
     {

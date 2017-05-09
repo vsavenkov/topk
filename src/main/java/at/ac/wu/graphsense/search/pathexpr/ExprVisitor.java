@@ -5,12 +5,10 @@ import java.util.Collection;
 /**
  * Created by Vadim on 08.05.2017.
  */
-public interface ExprVisitor<T,V,E> {
-    T visitEdge(Edge<V,E> e);
+public interface ExprVisitor<V,E> {
+    void visitLink(Link<V,E> link);
 
-    T visitAlt(Alt<V,E> e);
+    void visitAlt(Alt<V,E> alt);
 
-    T visitSeq(Seq<V,E> e);
-
-    T combine( Collection<T> ts );
+    void visitSeq(Seq<V,E> seq);
 }

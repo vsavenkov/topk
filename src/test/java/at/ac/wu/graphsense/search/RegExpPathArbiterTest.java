@@ -34,7 +34,7 @@ public class RegExpPathArbiterTest {
 
         // Algorithm seems to be OK
 
-        RegExpPathArbiter rpa = new RegExpPathArbiter(TestUtil.QPREDICATE+"*") {
+        RegExpPathArbiter rpa = new RegExpPathArbiter(null) {
             @Override
             protected String edgePattern() {
                 return "([a-zA-Z0-9]*:[a-zA-Z0-9]*)";
@@ -65,7 +65,7 @@ public class RegExpPathArbiterTest {
     @Test
     public void genericRE_label_star2() throws Exception {
 
-        RegExpPathArbiter rpa = new RegExpPathArbiter("Label*") {
+        RegExpPathArbiter rpa = new RegExpPathArbiter(null) {
             @Override
             protected String edgePattern() {
                 return super.edgePattern();

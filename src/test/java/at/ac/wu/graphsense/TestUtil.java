@@ -1,6 +1,6 @@
 package at.ac.wu.graphsense;
 
-import at.ac.wu.graphsense.hdt.search.HDTGraphIndex;
+import at.ac.wu.graphsense.hdt.HDTGraphIndex;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -10,7 +10,7 @@ import org.rdfhdt.hdt.enums.RDFNotation;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
-import org.rdfhdt.hdt.options.HDTSpecification;
+import org.rdfhdt.hdt.options.HDTOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,7 +118,7 @@ public class TestUtil {
 
         public int start = -1, target = -1, edge = -1, numPaths = 0;
 
-        public Graph(String spec, int numPaths) throws Exception
+        public Graph(String spec, int numPaths)
         {
             hdt = TestUtil.createVertexLabeledGraph(spec);
             dict = hdt.getDictionary();
@@ -132,7 +132,7 @@ public class TestUtil {
             _log.debug("Total elements: " + dict.getNumberOfElements());
             _log.debug("Start ("+start+") " + dict.idToString(start, TripleComponentRole.SUBJECT));
             _log.debug("Target ("+target+"): " + dict.idToString(target, TripleComponentRole.SUBJECT));
-            _log.debug("Edge: " + dict.idToString(edge, TripleComponentRole.PREDICATE));
+            _log.debug("Link: " + dict.idToString(edge, TripleComponentRole.PREDICATE));
 
             this.numPaths = numPaths;
         }
@@ -158,8 +158,7 @@ public class TestUtil {
             model.write( new FileOutputStream(tmp), "TURTLE");
 
             HDT hdt = HDTManager.generateHDT(tmp.getAbsolutePath(), NAMESPACE,
-                    RDFNotation.TURTLE,
-                    new HDTSpecification(), null);
+                    RDFNotation.TURTLE, new EmptyHDTOptions(), null);
             return hdt;
 
         } catch (Exception e) {
@@ -174,5 +173,37 @@ public class TestUtil {
         }
     }
 
+    static class EmptyHDTOptions implements HDTOptions{
+
+        @Override
+        public String get(String s) {
+            return null;
+        }
+
+        @Override
+        public void set(String s, String s1) {
+
+        }
+
+        @Override
+        public void setOptions(String s) {
+
+        }
+
+        @Override
+        public long getInt(String s) {
+            return 0;
+        }
+
+        @Override
+        public void setInt(String s, long l) {
+
+        }
+
+        @Override
+        public void clear() {
+
+        }
+    }
 
 }

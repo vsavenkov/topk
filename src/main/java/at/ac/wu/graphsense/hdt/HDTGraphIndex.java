@@ -1,4 +1,4 @@
-package at.ac.wu.graphsense.hdt.search;
+package at.ac.wu.graphsense.hdt;
 
 import at.ac.wu.graphsense.*;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
@@ -162,9 +162,7 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
                 }
                 int vertex = fetchSubjects ? tid.getSubject() : tid.getObject();
 
-                e = new EdgeInt();
-                e.label = tid.getPredicate();
-                e.vertex = vertex;
+                e = new EdgeInt( vertex, tid.getPredicate());
             }
         }
 
@@ -174,7 +172,7 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
         }
     }
 
-    class EmptyTripleIterator extends EdgeInt implements Iterator<Edge<Integer,Integer>>{
+    class EmptyTripleIterator implements Iterator<Edge<Integer,Integer>>{
 
         @Override
         public boolean hasNext() {
@@ -191,6 +189,5 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
             throw new RuntimeException("Remove not implemented");
         }
     }
-
 
 }

@@ -111,10 +111,10 @@ public class Path<V,E>  {
 
 //    public boolean isValid(){
 //        if( isEdgeLabeled() ) {
-//            Set<Edge> edges = new HashSet<>(edgeSeq.size());
+//            Set<Link> edges = new HashSet<>(edgeSeq.size());
 //
-//            for (Edge e : this.edgeSequence()) {
-//                Edge pe = new Edge(e);
+//            for (Link e : this.edgeSequence()) {
+//                Link pe = new Link(e);
 //                if (edges.contains(pe)) {
 //                    return false;
 //                }
