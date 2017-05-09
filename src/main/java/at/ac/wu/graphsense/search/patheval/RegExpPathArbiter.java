@@ -81,6 +81,13 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
         public void visitLink(Link<V, E> link) {
             labels.add( link.getEdge().label() );
         }
+
+        @Override
+        public void visitNegEdgeSet(NegEdgeSet<V, E> neset) {
+            for( Edge<V,E> e : neset.getFWEdges() ){
+                labels.add(e.label());
+            }
+        }
     }
 
     class CharRegExpPrinter implements ExprVisitor<V,E> {
@@ -109,7 +116,15 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
         public void visitSeq(Seq<V, E> e) {
             iterate(e.inner(),e.modifier());
         }
-
+        @Override
+        public void visitNegEdgeSet(NegEdgeSet<V, E> neset) {
+            StringBuilder sb = new StringBuilder("[^");
+            for( Edge<V,E> e : neset.getFWEdges() ){
+                sb.append(enc.get(e.label()));
+            }
+            sb.append(']');
+            s.push( sb + neset.modifier() );
+        }
         void iterate (Collection<PathExpr<V,E>> coll, String modifier){
             iterate( coll, modifier,"");
         }
@@ -122,6 +137,7 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
                 if(sb.length()>0){
                     sb.append(separator);
                 }
+                sb.append(str);
             }
             s.push( "("+ sb.toString()+")" + modifier );
 

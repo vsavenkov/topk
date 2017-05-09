@@ -11,4 +11,6 @@ public interface ExprVisitor<V,E> {
     void visitAlt(Alt<V,E> alt);
 
     void visitSeq(Seq<V,E> seq);
+
+    void visitNegEdgeSet( NegEdgeSet<V,E> neset );
 }

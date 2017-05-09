@@ -30,7 +30,8 @@ public class Edge<V,E> {
 
 
     @Override
-    public int hashCode(){ return vertex.hashCode() + (label!=null? 1000*label.hashCode() : 0); }
+    public int hashCode(){ return (vertex!=null? vertex.hashCode() : 0)
+                                + (label!=null? 1000*label.hashCode() : 0); }
 
     @Override
     public boolean equals( Object obj ){

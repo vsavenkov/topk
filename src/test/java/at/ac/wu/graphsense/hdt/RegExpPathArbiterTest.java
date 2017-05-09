@@ -41,13 +41,12 @@ public class RegExpPathArbiterTest {
         Model m = ModelFactory.createDefaultModel();
         m.setNsPrefix("",TestUtil.NAMESPACE);
 
-        Path p = PathParser.parse(":"+TestUtil.PREDICATE+"*", m);
+        Path p = PathParser.parse("(:"+TestUtil.PREDICATE+")+", m);
 
         PathExpr<Integer,Integer> pathExpr = PathExprFactory.createPathExpr( p, g.edict );
 
         // Algorithm seems to be OK
         RegExpPathArbiter rpa = new RegExpPathArbiter(pathExpr);
-
         rpa.init(g.gix,g.start,g.target,true);
 
         topK = new BidirectionalTopK<>();

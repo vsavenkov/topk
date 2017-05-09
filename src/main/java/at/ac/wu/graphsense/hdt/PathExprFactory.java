@@ -1,15 +1,12 @@
 package at.ac.wu.graphsense.hdt;
 
+import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.EdgeDictionary;
-import at.ac.wu.graphsense.search.pathexpr.Alt;
-import at.ac.wu.graphsense.search.pathexpr.Link;
-import at.ac.wu.graphsense.search.pathexpr.PathExpr;
-import at.ac.wu.graphsense.search.pathexpr.Seq;
+import at.ac.wu.graphsense.search.pathexpr.*;
+import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.path.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by Vadim on 08.05.2017.
@@ -81,14 +78,25 @@ public class PathExprFactory {
             pe.setMaxOccurrences(max);
         }
 
+        @Override
+        public void visit(P_NegPropSet p_negPropSet) {
+            if( null!=p_negPropSet.getBwdNodes() && !p_negPropSet.getBwdNodes().isEmpty() ){
+                throw new UnsupportedOperationException("Inverse properties are not supported.");
+            }
+            List<Edge<Integer,Integer>> edges = new LinkedList<>();
+
+            for(Node n : p_negPropSet.getFwdNodes()  ){
+                Integer val = ed.edgeKey(n.getURI());
+                edges.add(new EdgeInt(null, val));
+            }
+
+            s.push( new NegEdgeSet<>(edges) );
+        }
+
+
 /*
         @Override
         public void visit(P_ReverseLink p_reverseLink) {
-
-        }
-
-        @Override
-        public void visit(P_NegPropSet p_negPropSet) {
 
         }
 
