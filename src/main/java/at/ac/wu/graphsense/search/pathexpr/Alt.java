@@ -5,6 +5,7 @@ package at.ac.wu.graphsense.search.pathexpr;
  */
 public class Alt<V,E> extends PathExpr<V,E> {
 
+    @Override
     public void visit(ExprVisitor<V,E> v){
         v.visitAlt(this);
     }

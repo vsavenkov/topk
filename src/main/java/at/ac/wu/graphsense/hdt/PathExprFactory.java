@@ -76,7 +76,7 @@ public class PathExprFactory {
 
         protected void visit1(P_Path1 p1, Integer min, Integer max){
             p1.getSubPath().visit(this);
-            PathExpr<Integer,Integer> pe = s.pop();
+            PathExpr<Integer,Integer> pe = s.peek();
             pe.setMinOccurrences(min);
             pe.setMaxOccurrences(max);
         }

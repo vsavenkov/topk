@@ -128,7 +128,7 @@ public class TestUtil {
             edict = hdtgix;
 
             start = vdict.vertexKey(TestUtil.QSOURCE, Edge.Component.SOURCE);
-            start = vdict.vertexKey(TestUtil.QTARGET, Edge.Component.TARGET);
+            target = vdict.vertexKey(TestUtil.QTARGET, Edge.Component.TARGET);
             edge = edict.edgeKey(TestUtil.QPREDICATE);
 
             this.numPaths = numPaths;

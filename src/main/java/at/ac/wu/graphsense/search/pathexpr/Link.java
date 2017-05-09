@@ -20,4 +20,10 @@ public class Link<V,E> extends PathExpr<V,E> {
     public String toString(){
         return getEdge().label().toString()+modifier();
     }
+
+    @Override
+    public void visit(ExprVisitor<V,E> v){
+        v.visitLink(this);
+    }
+
 }

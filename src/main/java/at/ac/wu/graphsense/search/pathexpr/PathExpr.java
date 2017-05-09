@@ -1,6 +1,7 @@
 package at.ac.wu.graphsense.search.pathexpr;
 
 import dk.brics.automaton.RegExp;
+import org.apache.jena.ext.com.google.common.collect.Lists;
 import sun.awt.image.ImageWatched;
 
 import java.util.*;
@@ -30,11 +31,7 @@ public abstract class PathExpr<V,E> {
 
     List<PathExpr<V,E>> is = new LinkedList<>();
 
-    public void visit(ExprVisitor<V,E> v){
-        for( PathExpr<V,E> ex : is  ){
-            ex.visit(v);
-        }
-    }
+    public abstract void visit(ExprVisitor<V,E> v);
 
     public void add( PathExpr<V,E> e ){
         is.add(e);
@@ -45,7 +42,9 @@ public abstract class PathExpr<V,E> {
     }
 
     public PathExpr<V,E> inverse(){
-        throw new UnsupportedOperationException();
+        Inverter inv = new Inverter();
+        this.visit(inv);
+        return inv.s.peek();
     }
 
     public String modifier(){
@@ -107,4 +106,46 @@ public abstract class PathExpr<V,E> {
             s.push( "("+sb.toString()+")"+e.modifier() );
         }
     }
+
+    class Inverter implements ExprVisitor<V,E>{
+
+        Stack<PathExpr<V,E>> s = new Stack<>();
+
+        @Override
+        public void visitLink(Link<V, E> link) {
+            s.push(link);
+        }
+
+        @Override
+        public void visitAlt(Alt<V, E> alt) {
+            Alt<V,E> altNew = new Alt<>();
+            altNew.setMinOccurrences( alt.getMinOccurrences() );
+            altNew.setMaxOccurrences( alt.getMaxOccurrences() );
+
+            for( PathExpr<V,E> i : alt.inner() ){
+                i.visit(this);
+                altNew.add(s.pop());
+            }
+            s.push(altNew);
+        }
+
+        @Override
+        public void visitSeq(Seq<V, E> seq) {
+            LinkedList<PathExpr<V,E>> children = new LinkedList<>();
+
+            for( PathExpr<V,E> i : seq.inner() ){
+                i.visit(this);
+                children.add(s.pop());
+            }
+            Seq<V,E> seqNew = new Seq<>();
+            seqNew.setMinOccurrences( seq.getMinOccurrences() );
+            seqNew.setMaxOccurrences( seq.getMaxOccurrences() );
+
+            while( !children.isEmpty() ){
+                seqNew.add( children.pollLast() );
+            }
+            s.push(seqNew);
+        }
+    }
+
 }
