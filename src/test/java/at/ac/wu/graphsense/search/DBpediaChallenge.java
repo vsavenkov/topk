@@ -1,7 +1,6 @@
 package at.ac.wu.graphsense.search;
 
 import at.ac.wu.graphsense.Edge;
-import at.ac.wu.graphsense.TestUtil;
 import at.ac.wu.graphsense.hdt.HDTGraphIndex;
 import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;

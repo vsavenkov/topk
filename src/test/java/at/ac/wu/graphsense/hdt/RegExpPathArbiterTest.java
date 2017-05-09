@@ -56,13 +56,5 @@ public class RegExpPathArbiterTest {
         assertEquals(g.numPaths, solutions.size());
     }
 
-    @Test
-    public void genericRE_label_star2() throws Exception {
-
-        RegExpPathArbiter rpa = new RegExpPathArbiter(null);
-
-        assertTrue(true);
-    }
-
 
 }
