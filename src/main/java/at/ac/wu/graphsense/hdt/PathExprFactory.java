@@ -50,7 +50,6 @@ public class PathExprFactory {
         protected void visit2(P_Path2 p2, PathExpr pe){
             p2.getLeft().visit(this);
             p2.getRight().visit(this);
-            List<PathExpr<Integer,Integer>> options = new LinkedList<>();
             pe.add(s.pop());
             pe.add(s.pop());
             s.push(pe);

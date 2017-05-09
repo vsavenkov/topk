@@ -1,9 +1,17 @@
 package at.ac.wu.graphsense.search;
 
 import at.ac.wu.graphsense.Edge;
+import at.ac.wu.graphsense.TestUtil;
 import at.ac.wu.graphsense.hdt.HDTGraphIndex;
 import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;
+import at.ac.wu.graphsense.hdt.PathExprFactory;
+import at.ac.wu.graphsense.search.patheval.PathArbiter;
+import at.ac.wu.graphsense.search.patheval.RegExpPathArbiter;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.sparql.path.Path;
+import org.apache.jena.sparql.path.PathParser;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.exceptions.NotFoundException;
 import java.io.File;
@@ -23,54 +31,55 @@ public class DBpediaChallenge {
             boolean doCheck = true;
 
 
-            //testcases.put("task2_q4_1", "1,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
+            testcases.put("task2_q3_12", "12,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
+            testcases.put("task2_q4_1", "1,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
             testcases.put("task1_q4_2", "2,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
             testcases.put("task1_q2_3", "3,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,no");
-            //testcases.put("task2_q2_3", "3,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
+            testcases.put("task2_q2_3", "3,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
             testcases.put("task1_q2_4", "4,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,no");
-            //testcases.put("task2_q2_4", "4,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
-            //testcases.put("task2_q4_6", "6,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
+            testcases.put("task2_q2_4", "4,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
+            testcases.put("task2_q4_6", "6,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
             testcases.put("task1_q1_8", "8,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,no");
-            //testcases.put("task2_q3_12", "12,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
+
+
+            testcases.put("task2_q4_72", "72,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
 
             testcases.put("task1_q4_16", "16,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
-            //testcases.put("task2_q1_32", "32,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
+            testcases.put("task2_q1_32", "32,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
             testcases.put("task1_q3_36", "36,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,no");
-            //testcases.put("task2_q4_72", "72,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
-            //testcases.put("task2_q2_76", "76,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
-            //testcases.put("task2_q3_76", "76,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
+            testcases.put("task2_q2_76", "76,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
+            testcases.put("task2_q3_76", "76,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
             testcases.put("task1_q2_79", "79,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,no");
-            //testcases.put("task2_q1_98", "98,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
+            testcases.put("task2_q1_98", "98,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
 
             //disjunctive filter
-            //testcases.put("task2_q2_151", "151,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
+            testcases.put("task2_q2_151", "151,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
             testcases.put("task1_q2_154", "154,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,no");
             testcases.put("task1_q4_250", "250,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
             testcases.put("task1_q3_336", "336,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,no");
             testcases.put("task1_q1_344", "344,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,no");
 
 
-            //testcases.put("task2_q4_614", "614,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
+            testcases.put("task2_q4_614", "614,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
             testcases.put("task1_q1_1068", "1068,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,no");
-            //testcases.put("task2_q3_1440", "1440,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
-            //testcases.put("task2_q1_1914", "1914,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
+            testcases.put("task2_q3_1440", "1440,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
+            testcases.put("task2_q1_1914", "1914,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
             testcases.put("task1_q4_1906", "1906,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
-            //TOO SLOW:
-            //testcases.put("task2_q2_2311", "2311,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
+
+            testcases.put("task2_q2_2311", "2311,http://dbpedia.org/resource/1952_Winter_Olympics,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/after");
             testcases.put("task1_q3_4866", "4866,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,no");
-            //testcases.put("task2_q4_5483", "5483,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
-            //testcases.put("task2_q3_8088", "8088,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
+            testcases.put("task2_q4_5483", "5483,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
+            testcases.put("task2_q3_8088", "8088,http://dbpedia.org/resource/Karl_W._Hofmann,http://dbpedia.org/resource/Elliot_Richardson,http://dbpedia.org/property/predecessor");
             //TOO SLOW:
-            //testcases.put("task2_q1_16632", "16632,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
+            testcases.put("task2_q1_16632", "16632,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
             testcases.put("task1_q1_20152", "20152,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,no");
             testcases.put("task1_q4_20224", "20224,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
-            //testcases.put("task2_q4_52649", "52649,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
+            testcases.put("task2_q4_52649", "52649,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
             testcases.put("task1_q4_175560", "175560,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,no");
             //TOO SLOW:
-            //testcases.put("task2_q1_212988", "212988,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
+            testcases.put("task2_q1_212988", "212988,http://dbpedia.org/resource/Felipe_Massa,http://dbpedia.org/resource/Red_Bull,http://dbpedia.org/property/firstWin");
             //TOO SLOW:
-            //testcases.put("task2_q4_471199", "471199,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
-
+            testcases.put("task2_q4_471199", "471199,http://dbpedia.org/resource/James_K._Polk,http://dbpedia.org/resource/Felix_Grundy,http://dbpedia.org/ontology/president");
 
             //Challenge
             String dataset = "training_dataset.hdt"; //"evaluation_dataset.hdt";
@@ -99,6 +108,25 @@ public class DBpediaChallenge {
                 if (edge.equalsIgnoreCase("no")) {
                     edge = null;
                 }
+
+                PathArbiter<Integer,Integer> parb = null;
+
+                if(edge !=null){
+                    int lastSlash = edge.lastIndexOf('/')+1;
+                    String prefix = edge.substring(0,lastSlash);
+                    String property = edge.substring(lastSlash);
+
+                    Model m = ModelFactory.createDefaultModel();
+                    m.setNsPrefix("yy",prefix);
+                    m.setNsPrefix("","http://dummy/url/");
+
+
+                    Path p = PathParser.parse("yy:"+property+"/!:dummy*|!:dummy*/yy:"+property, m);
+                    parb = new RegExpPathArbiter<>(PathExprFactory.createPathExpr(p,hdt));
+                    parb.init(hdt, vd.vertexKey(root, Edge.Component.SOURCE)
+                                 , vd.vertexKey(target, Edge.Component.TARGET)
+                                 ,true);
+                }
                 BidirectionalTopK topK = new BidirectionalTopK();
                 topK.init(hdt);
 
@@ -108,7 +136,7 @@ public class DBpediaChallenge {
                     results = topK.run(vd.vertexKey(root, Edge.Component.SOURCE)
                                       ,vd.vertexKey(target, Edge.Component.TARGET)
                                       ,k
-                                      ,null);
+                                      ,parb);
                 } catch (Exception e) {
                     e.printStackTrace();
                     continue;
@@ -120,7 +148,7 @@ public class DBpediaChallenge {
 
                 if( doPrint ) {
                     start = System.currentTimeMillis();
-                    //Util.printPaths(results, hdt, key);
+                    Util.printPaths(results, hdt, key);
                     end = System.currentTimeMillis();
                     System.out.println("Time elapsed to print paths: " + (end - start) + " ms");
                 }

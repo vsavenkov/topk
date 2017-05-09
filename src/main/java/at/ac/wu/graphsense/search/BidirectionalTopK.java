@@ -92,37 +92,61 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
                                 double rank = this.arbiter.composeRanks(left, left.rank, right, right.rank);
 
-                                if(rank > 0){
+                                if( !CumulativeRank.prune(rank) ){
                                     LinkedList<Edge<V,E>> path = new LinkedList<>();
                                     left.traceLeft(path);
                                     right.traceRight(path);
 
-                                    solutions.add(path);
+                                    //avoid repeated edges
+                                    Iterator<Edge<V,E>> it = path.iterator();
+                                    Set<String> edges = new HashSet<>();
+                                    Edge<V,E> prev = it.next();
+                                    while( it.hasNext() ){
+                                        Edge<V,E> cur = it.next();
+                                        String edge = String.format("%s:-:%s:-:%s"
+                                                ,prev.vertex(),cur.label(),cur.vertex());
 
-                                    for( SearchProgressListener l : listeners ){
-                                        if(!l.onPathFound(path)){
+                                        if( edges.contains(edge) ){
+                                            rank = CumulativeRank.PRUNE_PATH;
+                                            break;
+                                        }
+                                        edges.add(edge);
+                                        prev = cur;
+                                    }
+
+                                    if( !CumulativeRank.prune(rank) ) {
+
+                                        solutions.add(path);
+
+                                        for( SearchProgressListener l : listeners ){
+                                            if(!l.onPathFound(path)){
+                                                return solutions;
+                                            }
+                                        }
+                                        if (solutions.size() >= k) {
                                             return solutions;
                                         }
                                     }
+
                                 }
 
                             }
                         }
                     }
                 }
-                if (solutions.size() >= k) {
-                    return solutions;
-                }
             }
             return solutions;
         }
 
         TraversalEdge<V,E> makeTerminalEdge( V vertex ){
+            boolean backward = vertex==this.targetNode;
             TraversalEdge<V,E> te = new TraversalEdge<>();
             Edge<V,E> e = new Edge<>(vertex,null);
-            te.init( e, null, new CumulativeRank(), vertex==this.targetNode );
+            te.init( e, null, new CumulativeRank(0, arbiter.getInitialState(backward)), backward );
             return te;
         }
+
+
 
       //
        class Frontier {
@@ -244,7 +268,7 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
                     if( !rank.prune() && !visitedEdge(e.vertex(),sprout) ) {
                         TraversalEdge<V,E> te = new TraversalEdge<>();
-                        te.init(sprout, this, new CumulativeRank(), backward);
+                        te.init(sprout, this, rank, backward);
                         es.add(te);
                     }
                 }

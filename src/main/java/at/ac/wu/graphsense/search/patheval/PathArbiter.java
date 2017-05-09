@@ -58,4 +58,6 @@ public interface PathArbiter<V,E> {
      double composeRanks( Iterable<Edge<V,E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V,E>> suffix, CumulativeRank suffixRank )
      throws UnsupportedOperationException;
 
+     Object getInitialState(boolean backward);
+
 }

@@ -8,7 +8,6 @@ import at.ac.wu.graphsense.search.pathexpr.PathExpr;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.sparql.path.Path;
-import org.apache.jena.sparql.path.PathCompiler;
 import org.apache.jena.sparql.path.PathParser;
 import org.junit.Test;
 

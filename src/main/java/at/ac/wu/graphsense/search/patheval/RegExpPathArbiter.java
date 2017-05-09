@@ -53,7 +53,7 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
         RunAutomaton ra = backwardPath? at : atInv;
         CumulativeRank rank = CumulativeRank.forkIfNeeded(pathRank, forkRankObject);
 
-        int state = path.iterator().hasNext()? (Integer)rank.getArbiterState() : ra.getInitialState();
+        int state = path.iterator().hasNext() ? (Integer) rank.getArbiterState() : ra.getInitialState();
 
         Character edgeEncoding = edgeMap.containsKey(edge.label()) ? edgeMap.get(edge.label()) : otherChar;
 
@@ -71,8 +71,29 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
     }
 
     @Override
-    public double composeRanks(Iterable<Edge<V, E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V, E>> suffix, CumulativeRank suffixRank) throws UnsupportedOperationException {
-        return CumulativeRank.MAX;
+    public double composeRanks(Iterable<Edge<V, E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V, E>> suffix, CumulativeRank suffixRank) {
+
+        StringBuilder sb = new StringBuilder();
+        for(Edge<V,E> e : prefix){
+            sb.append( encodeEdge(e) );
+        }
+        sb = sb.reverse();
+        for(Edge<V,E> e : suffix){
+            sb.append( encodeEdge(e) );
+        }
+
+        return at.run(sb.toString())? CumulativeRank.MAX : CumulativeRank.PRUNE_PATH;
+    }
+
+    @Override
+    public Object getInitialState( boolean backward ){
+        RunAutomaton a = backward? atInv : at;
+        return a==null? null : a.getInitialState();
+    }
+
+    protected Character encodeEdge( Edge<V,E> edge ){
+        E label = edge.label();
+        return edgeMap.containsKey(label)? edgeMap.get(label) : otherChar;
     }
 
     class LabelCollector extends ExprVisitorBase<V,E> {
@@ -139,7 +160,7 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
                 }
                 sb.append(str);
             }
-            s.push( "("+ sb.toString()+")" + modifier );
+            s.push( sb.toString()+ modifier );
 
         }
     }

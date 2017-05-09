@@ -22,5 +22,8 @@ public class AllPassArbiter<V,E> implements PathArbiter<V,E> {
     {
         return CumulativeRank.MAX;
     }
+
+    @Override
+    public Object getInitialState(boolean backward){ return null; }
 }
 

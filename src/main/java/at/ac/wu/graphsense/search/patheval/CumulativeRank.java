@@ -16,13 +16,20 @@ public class CumulativeRank {
         this.rank = rank;
     }
 
+    public CumulativeRank(double rank, Object arbiterState){
+        this.rank = rank;
+        this.arbiterState = arbiterState;
+    }
+
     public double getRank(){ return rank; }
     public void setRank( double rank ){ this.rank = rank; }
 
     public Object getArbiterState(){ return arbiterState; }
     public void setArbiterState(Object arbiterState){ this.arbiterState = arbiterState; }
 
-    public boolean prune(){ return rank < 0; }
+    public boolean prune(){ return prune(rank); }
+
+    public static boolean prune(double rank){ return rank < 0; }
 
     public static CumulativeRank forkIfNeeded(CumulativeRank old, Boolean needed){
         CumulativeRank ret = old;

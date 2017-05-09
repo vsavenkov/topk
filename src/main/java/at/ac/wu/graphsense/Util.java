@@ -26,7 +26,7 @@ public class Util
         return new Multipath(p, gi).enumeratePaths();
     }
 
-    static void printPaths(Collection<List<Edge<Integer,Integer>>>paths, GraphIndex gi, String key){
+    static public void printPaths(Collection<List<Edge<Integer,Integer>>>paths, GraphIndex gi, String key){
         final Logger _log = LoggerFactory.getLogger(Path.class);
 
         PrintWriter writer;

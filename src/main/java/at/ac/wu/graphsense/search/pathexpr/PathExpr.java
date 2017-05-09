@@ -49,10 +49,13 @@ public abstract class PathExpr<V,E> {
     }
 
     public String modifier(){
-        if( min==0 && max == null ){
+        if( min==max && min==null){
+            return "";
+        }
+        if( max == null && min==0 ){
             return "*";
         }
-        if( min==1 && max == null ){
+        if( max == null && min==1 ){
             return "+";
         }
         if( min==0 && max == 1 ){
