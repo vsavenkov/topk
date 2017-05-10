@@ -43,6 +43,8 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
         //@Loggable(prepend=true)
         public Collection<List<Edge<V,E>>> run(V start, V end, int k, PathArbiter<V,E> arbiter) throws IOException {
 
+            init(gix);
+
             startNode = start;
             targetNode = end;
             this.k = k;

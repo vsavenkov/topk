@@ -45,7 +45,7 @@ public class KnowsGraphTest {
         Collection<List<Edge<Integer,Integer>>> results;
 
         try {
-            results = topK.run(source, target, 10, parb);
+            results = topK.run(source, target, 10, null);
             for( Collection<Edge<Integer,Integer>> r : results ){
                 System.out.println(Util.format(r,hdt));
             }
