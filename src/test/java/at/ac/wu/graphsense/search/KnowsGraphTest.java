@@ -2,6 +2,7 @@ package at.ac.wu.graphsense.search;
 
 import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.TestUtil;
+import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;
 import at.ac.wu.graphsense.hdt.HDTGraphIndex;
 import at.ac.wu.graphsense.hdt.PathExprFactory;
@@ -32,10 +33,10 @@ public class KnowsGraphTest {
         HDTGraphIndex hdt = new HDTGraphIndex(TestUtil.createHDT(model));
 
         String px = model.getNsPrefixMap().getOrDefault("","http://dbpedia.org/resource");
-        Path p = PathParser.parse("(:knows)*", model);
+        Path p = PathParser.parse("(:knows)*/:name", model);
         PathArbiter<Integer,Integer> parb = new RegExpPathArbiter<>(PathExprFactory.createPathExpr(p,hdt));
-        int source = hdt.vertexKey(px+"a", Edge.Component.SOURCE);
-        int target = hdt.vertexKey(px+"c", Edge.Component.TARGET);
+        int source = hdt.vertexKey(px+"e", Edge.Component.SOURCE);
+        int target = hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET);
         parb.init(hdt, source, target, true);
 
         BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
@@ -45,6 +46,9 @@ public class KnowsGraphTest {
 
         try {
             results = topK.run(source, target, 10, parb);
+            for( Collection<Edge<Integer,Integer>> r : results ){
+                System.out.println(Util.format(r,hdt));
+            }
         }
         catch(IOException ex){
 
