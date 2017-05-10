@@ -25,6 +25,7 @@ import java.util.List;
 public class KnowsGraphTest {
 
     final static String knowsGraph ="@prefix : <http://dbpedia.org/resource/> . "
+                                  + "@prefix db: <http://dbpedia.org/resource/> ."
                                   + ":a :knows :b . :b :knows :c . :c :name \"qaiser\" ."
                                   + ":a :knows :e . :e :knows :c . :e :name \"mehmood\" ";
 
@@ -38,8 +39,8 @@ public class KnowsGraphTest {
         System.out.println("The literal \"mehmood\" in the object position has HDT code " + hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET)
                         + " and " + hdt.vertexKey("\"mehmood\"", Edge.Component.SOURCE) + " in the source position");
 
-        String px = model.getNsPrefixMap().getOrDefault("","http://dbpedia.org/resource");
-        Path p = PathParser.parse("(:knows)*/:name?", model);
+        String px = model.getNsPrefixMap().getOrDefault("db","http://dbpedia.org/resource");
+        Path p = PathParser.parse("(db:knows)*", model);
         PathArbiter<Integer,Integer> parb = new HDTRegExpPathArbiter(PathExprFactory.createPathExpr(p,hdt));
         int source = hdt.vertexKey(px+"e", Edge.Component.SOURCE);
         //int target = hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET);
