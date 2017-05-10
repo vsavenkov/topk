@@ -4,6 +4,7 @@ import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.hdt.HDTGraphIndex;
 import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;
+import at.ac.wu.graphsense.hdt.HDTRegExpPathArbiter;
 import at.ac.wu.graphsense.hdt.PathExprFactory;
 import at.ac.wu.graphsense.search.patheval.PathArbiter;
 import at.ac.wu.graphsense.search.patheval.RegExpPathArbiter;
@@ -121,21 +122,17 @@ public class DBpediaChallenge {
 
 
                     Path p = PathParser.parse("yy:"+property+"/!:dummy*|!:dummy*/yy:"+property, m);
-                    parb = new RegExpPathArbiter<>(PathExprFactory.createPathExpr(p,hdt));
-                    parb.init(hdt, vd.vertexKey(root, Edge.Component.SOURCE)
-                                 , vd.vertexKey(target, Edge.Component.TARGET)
-                                 ,true);
+                    parb = new HDTRegExpPathArbiter(PathExprFactory.createPathExpr(p,hdt));
                 }
-                BidirectionalTopK topK = new BidirectionalTopK();
-                topK.init(hdt);
+                BidirectionalTopK topK = new BidirectionalTopK(hdt);
+                topK.setPathArbiter(parb);
 
                 start = System.currentTimeMillis();
                 Collection<List<Edge<Integer,Integer>>> results;
                 try {
                     results = topK.run(vd.vertexKey(root, Edge.Component.SOURCE)
                                       ,vd.vertexKey(target, Edge.Component.TARGET)
-                                      ,k
-                                      ,parb);
+                                      ,k);
                 } catch (Exception e) {
                     e.printStackTrace();
                     continue;

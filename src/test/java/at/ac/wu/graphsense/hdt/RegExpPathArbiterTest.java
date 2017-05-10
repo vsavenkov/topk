@@ -28,10 +28,9 @@ public class RegExpPathArbiterTest {
         String sGraph = "s-b1-t. s-b2-t";
         final TestUtil.Graph g = new TestUtil.Graph(sGraph,2);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         if( g.numPaths != solutions.size() ){
             return;
@@ -45,13 +44,10 @@ public class RegExpPathArbiterTest {
         PathExpr<Integer,Integer> pathExpr = PathExprFactory.createPathExpr( p, g.edict );
 
         // Algorithm seems to be OK
-        RegExpPathArbiter rpa = new RegExpPathArbiter(pathExpr);
-        rpa.init(g.gix,g.start,g.target,true);
+        topK = new BidirectionalTopK(g.gix);
+        topK.setPathArbiter(new HDTRegExpPathArbiter(pathExpr));
 
-        topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
-
-        solutions = topK.run(g.start, g.target, g.numPaths, rpa);
+        solutions = topK.run(g.start, g.target, g.numPaths);
 
         assertEquals(g.numPaths, solutions.size());
     }

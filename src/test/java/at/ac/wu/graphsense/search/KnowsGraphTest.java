@@ -5,6 +5,7 @@ import at.ac.wu.graphsense.TestUtil;
 import at.ac.wu.graphsense.Util;
 import at.ac.wu.graphsense.VertexDictionary;
 import at.ac.wu.graphsense.hdt.HDTGraphIndex;
+import at.ac.wu.graphsense.hdt.HDTRegExpPathArbiter;
 import at.ac.wu.graphsense.hdt.PathExprFactory;
 import at.ac.wu.graphsense.search.patheval.PathArbiter;
 import at.ac.wu.graphsense.search.patheval.RegExpPathArbiter;
@@ -32,26 +33,27 @@ public class KnowsGraphTest {
         Model model = TestUtil.createLabeledGraph(knowsGraph);
         HDTGraphIndex hdt = new HDTGraphIndex(TestUtil.createHDT(model));
 
-        String px = model.getNsPrefixMap().getOrDefault("","http://dbpedia.org/resource");
-        Path p = PathParser.parse("(:knows)*/:name", model);
-        PathArbiter<Integer,Integer> parb = new RegExpPathArbiter<>(PathExprFactory.createPathExpr(p,hdt));
-        int source = hdt.vertexKey(px+"e", Edge.Component.SOURCE);
-        int target = hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET);
-        parb.init(hdt, source, target, true);
+        System.out.println("4 is " + hdt.vertexEntry(4, Edge.Component.SOURCE) + " as a subject, and "
+                        + hdt.vertexEntry(4, Edge.Component.TARGET) + " as an object.");
+        System.out.println("The literal \"mehmood\" in the object position has HDT code " + hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET)
+                        + " and " + hdt.vertexKey("\"mehmood\"", Edge.Component.SOURCE) + " in the source position");
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(hdt);
+        String px = model.getNsPrefixMap().getOrDefault("","http://dbpedia.org/resource");
+        Path p = PathParser.parse("(:knows)*/:name?", model);
+        PathArbiter<Integer,Integer> parb = new HDTRegExpPathArbiter(PathExprFactory.createPathExpr(p,hdt));
+        int source = hdt.vertexKey(px+"e", Edge.Component.SOURCE);
+        //int target = hdt.vertexKey("\"mehmood\"", Edge.Component.TARGET);
+        int target = hdt.vertexKey(px+"c", Edge.Component.TARGET);
+
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(hdt);
+
+        topK.setPathArbiter(parb);
 
         Collection<List<Edge<Integer,Integer>>> results;
 
-        try {
-            results = topK.run(source, target, 10, null);
-            for( Collection<Edge<Integer,Integer>> r : results ){
-                System.out.println(Util.format(r,hdt));
-            }
-        }
-        catch(IOException ex){
-
+        results = topK.run(source, target, 10);
+        for( Collection<Edge<Integer,Integer>> r : results ){
+            System.out.println(Util.format(r,hdt));
         }
     }
 }

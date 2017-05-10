@@ -8,7 +8,7 @@ import dk.brics.automaton.RunAutomaton;
 
 import java.util.*;
 
-public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
+public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
     Map<E,Character> edgeMap = new HashMap<>();
 
@@ -42,7 +42,6 @@ public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
     @Override
     public void init(GraphIndex<V, E> gi, V source, V target, boolean bidirectional) throws UnsupportedOperationException {
-
         at = new RunAutomaton(re.toAutomaton());
         atInv = new RunAutomaton( reInv.toAutomaton());
     }

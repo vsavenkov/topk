@@ -15,7 +15,9 @@ public interface TopKSearchAlgorithm<V,E> {
 
     void init(GraphIndex<V,E> gi);
 
-    Collection<List<Edge<V,E>>> run(V start, V end, int k, PathArbiter<V,E> fi) throws IOException;
+    void setPathArbiter( PathArbiter<V,E> arbiter );
+
+    Collection<List<Edge<V,E>>> run(V start, V end, int k);
 
     void addProgressListener( SearchProgressListener<V,E> listener );
 }

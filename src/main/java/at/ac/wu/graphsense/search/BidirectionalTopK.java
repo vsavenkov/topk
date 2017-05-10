@@ -1,11 +1,9 @@
 package at.ac.wu.graphsense.search;
 
 import at.ac.wu.graphsense.*;
-import at.ac.wu.graphsense.search.patheval.AllPassArbiter;
 import at.ac.wu.graphsense.search.patheval.CumulativeRank;
 import at.ac.wu.graphsense.search.patheval.PathArbiter;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,6 +25,10 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
         List<SearchProgressListener<V,E>> listeners = new LinkedList<>();
 
+        public BidirectionalTopK( GraphIndex<V,E> graphIndex ){
+            this.gix = graphIndex;
+        }
+
         public void init(GraphIndex<V,E> gi){
             gix = gi;
 
@@ -36,19 +38,32 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
             solutions = new HashSet<>();
         }
 
+        @Override
+        public void setPathArbiter(PathArbiter<V,E> arbiter)
+        {
+            if(arbiter == null && gix == null){
+                return;
+            }
+            this.arbiter = arbiter == null ? gix.createAllPassArbiter() : arbiter;
+        }
+
         public void addProgressListener( SearchProgressListener<V,E> listener ){
             listeners.add(listener);
         }
 
+
         //@Loggable(prepend=true)
-        public Collection<List<Edge<V,E>>> run(V start, V end, int k, PathArbiter<V,E> arbiter) throws IOException {
+        public Collection<List<Edge<V,E>>> run(V start, V end, int k) {
 
             init(gix);
 
             startNode = start;
             targetNode = end;
             this.k = k;
-            this.arbiter = arbiter == null ? new AllPassArbiter() : arbiter;
+            if( arbiter == null ){
+                arbiter = gix.createAllPassArbiter();
+            }
+            arbiter.init(gix,start,end,true);
 
             ff.set(FORWARD, new Frontier(false));
             ff.get(FORWARD).add(makeTerminalEdge(startNode));
@@ -94,7 +109,7 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
                                 double rank = this.arbiter.composeRanks(left, left.rank, right, right.rank);
 
-                                if( !CumulativeRank.prune(rank) ){
+                                if( !CumulativeRank.isPruneRank(rank) ){
                                     LinkedList<Edge<V,E>> path = new LinkedList<>();
                                     left.traceLeft(path);
                                     right.traceRight(path);
@@ -116,7 +131,7 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
                                         prev = cur;
                                     }
 
-                                    if( !CumulativeRank.prune(rank) ) {
+                                    if( !CumulativeRank.isPruneRank(rank) ) {
 
                                         solutions.add(path);
 
@@ -268,7 +283,7 @@ public class BidirectionalTopK<V,E> implements TopKSearchAlgorithm<V,E> {
 
                     CumulativeRank rank = arb.rankEdge(sprout, this, this.rank, fork, backward );
 
-                    if( !rank.prune() && !visitedEdge(e.vertex(),sprout) ) {
+                    if( !rank.isPruneRank() && !visitedEdge(e.vertex(),sprout) ) {
                         TraversalEdge<V,E> te = new TraversalEdge<>();
                         te.init(sprout, this, rank, backward);
                         es.add(te);

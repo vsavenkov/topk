@@ -1,6 +1,7 @@
 package at.ac.wu.graphsense.hdt;
 
 import at.ac.wu.graphsense.*;
+import at.ac.wu.graphsense.search.patheval.PathArbiter;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
@@ -44,6 +45,7 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
         this.dict = hdt.getDictionary();
     }
 
+    @Override
     public Iterator<Edge<Integer,Integer>> lookupEdges(Integer source, Integer target){
 
         if(source == null){
@@ -65,6 +67,11 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
 
         return result!=null? new TripleIterator(result, source.equals(0)) :
                 new EmptyTripleIterator();
+    }
+
+    @Override
+    public PathArbiter<Integer,Integer> createAllPassArbiter(){
+        return new HDTAllPassArbiter();
     }
 
     public String entry(Integer key, Edge.Component component ){
@@ -101,18 +108,23 @@ public class HDTGraphIndex implements GraphIndex<Integer,Integer>, VertexDiction
         return dict.stringToId( entry, tcr );
     }
 
+    @Override
     public String vertexEntry(Integer key, Edge.Component component ){
         return dict.idToString(key, TRCOMP[component.ordinal()]).toString();
     }
 
+    @Override
     public Integer vertexKey(String entry, Edge.Component component ){
         return dict.stringToId(entry, TRCOMP[component.ordinal()]);
     }
 
+    @Override
     public String edgeEntry(Integer key){
         CharSequence cs = dict.idToString(key, TripleComponentRole.PREDICATE);
         return cs!=null? cs.toString() : null;
     }
+
+    @Override
     public Integer edgeKey(String entry){
         return dict.stringToId(entry, TripleComponentRole.PREDICATE);
     }

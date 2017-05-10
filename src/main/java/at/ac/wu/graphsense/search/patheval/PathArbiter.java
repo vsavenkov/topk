@@ -26,7 +26,7 @@ public interface PathArbiter<V,E> {
      * @throws UnsupportedOperationException if only forward paths are supported and <code>bidirecional</code> is
      *                                       <code>true</code>.
      */
-    void init(GraphIndex<V,E> gi, V source, V target, boolean bidirectional) throws UnsupportedOperationException;
+    void init(GraphIndex<V,E> gi, V source, V target, boolean bidirectional);
 
     /**
      *  Transform the rank <code>rank</code> of the prefix path <code>path</code> into a rank of the path
@@ -55,8 +55,7 @@ public interface PathArbiter<V,E> {
      * @return The rank of the path <code>prefix.suffix</code>.
      * @throws UnsupportedOperationException if not supported.
      */
-     double composeRanks( Iterable<Edge<V,E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V,E>> suffix, CumulativeRank suffixRank )
-     throws UnsupportedOperationException;
+     double composeRanks( Iterable<Edge<V,E>> prefix, CumulativeRank prefixRank, Iterable<Edge<V,E>> suffix, CumulativeRank suffixRank );
 
      Object getInitialState(boolean backward);
 

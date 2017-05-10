@@ -9,6 +9,6 @@ import java.util.List;
  * Created by Vadim on 07.12.2016.
  */
 public interface SearchProgressListener<V,E> {
-    boolean onAdvance(int forw, int backw, int mapvf, int mapvb) throws IOException;
+    boolean onAdvance(int forw, int backw, int mapvf, int mapvb);
     boolean onPathFound(List<Edge<V,E>> path);
 }

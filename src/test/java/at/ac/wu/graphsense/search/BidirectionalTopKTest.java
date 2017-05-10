@@ -37,9 +37,8 @@ public class BidirectionalTopKTest {
         TestUtil.Graph g = new TestUtil.Graph("s-t",1);
         //Graph gi_reverse = new Graph("t-s",1,true);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -53,10 +52,9 @@ public class BidirectionalTopKTest {
         TestUtil.Graph g = new TestUtil.Graph("s-a1-t",1);
         //Graph gi_reverse = new Graph("t-a1-s",1,true);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -71,10 +69,9 @@ public class BidirectionalTopKTest {
         TestUtil.Graph g = new TestUtil.Graph("s-a1-a2-t",1);
         //TestUtil.Graph g_reverse = new TestUtil.Graph("t-a2-a1-s",1, true);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
         assertEquals(g.numPaths, solutions.size());
@@ -88,10 +85,9 @@ public class BidirectionalTopKTest {
         String sPattern = "s-b1-t. s-b2-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,2);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -106,10 +102,9 @@ public class BidirectionalTopKTest {
         String sPattern = "s-d1-c-ff-t. s-d2-c";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,2);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
         assertEquals(g.numPaths, solutions.size());
@@ -123,10 +118,8 @@ public class BidirectionalTopKTest {
         String sPattern = "s-ff-c-g1-t. c-g2-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,2);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
-
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -141,10 +134,8 @@ public class BidirectionalTopKTest {
         String sPattern = "s-h1-c-i1-t. s-h2-c-i2-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,4);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
-
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -157,10 +148,9 @@ public class BidirectionalTopKTest {
         String sPattern = "s-j1-j2-t . s-k1-k2-k3-t. k2-j1";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,3);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -173,10 +163,9 @@ public class BidirectionalTopKTest {
         String sPattern = "s-s-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,2);
 
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
 
         TestUtil.printSolutions(solutions,g.gix);
 
@@ -190,10 +179,9 @@ public class BidirectionalTopKTest {
         // s-t; s-l-s-m-s-t; s-m-s-l-s-t should be among possible paths
         String sPattern = "s-l-s-m-s-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,3);
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
         TestUtil.printSolutions(solutions,g.gix);
 
         assertEquals(g.numPaths, solutions.size());
@@ -206,10 +194,9 @@ public class BidirectionalTopKTest {
         //an s-n3-c-n4-s loop + two consecutive fork&joins: s(n1|n2)c(p1|p2)t
         String sPattern = "s-n3-c-n4-s. s-n1-c-p1-t. s-n2-c-p2-t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,6);
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
         TestUtil.printSolutions(solutions,g.gix);
 
         assertEquals(g.numPaths, solutions.size());
@@ -221,10 +208,9 @@ public class BidirectionalTopKTest {
         //an s-n3-c-n4-s loop + two consecutive fork&joins: s(n1|n2)c(p1|p2)t
         String sPattern = "s-b-t. s-a-b.t";
         TestUtil.Graph g = new TestUtil.Graph(sPattern,2);
-        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>();
-        topK.init(g.gix);
+        BidirectionalTopK<Integer,Integer> topK = new BidirectionalTopK<>(g.gix);
 
-        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths,null);
+        Collection<List<Edge<Integer,Integer>>> solutions = topK.run(g.start, g.target, g.numPaths);
         TestUtil.printSolutions(solutions,g.gix);
 
         assertEquals(g.numPaths, solutions.size());

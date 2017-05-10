@@ -27,9 +27,11 @@ public class CumulativeRank {
     public Object getArbiterState(){ return arbiterState; }
     public void setArbiterState(Object arbiterState){ this.arbiterState = arbiterState; }
 
-    public boolean prune(){ return prune(rank); }
+    public boolean isPruneRank(){ return isPruneRank(rank); }
 
-    public static boolean prune(double rank){ return rank < 0; }
+    public void forcePrune(){ rank = PRUNE_PATH; }
+
+    public static boolean isPruneRank(double rank){ return rank < 0; }
 
     public static CumulativeRank forkIfNeeded(CumulativeRank old, Boolean needed){
         CumulativeRank ret = old;
