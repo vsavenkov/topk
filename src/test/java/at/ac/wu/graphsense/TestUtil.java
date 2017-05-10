@@ -88,17 +88,22 @@ public class TestUtil {
         //rTex.addProperty(prop,rTex);
     }
 
+    public static Model createLabeledGraph(String modelTurtle){
+        return createLabeledGraph(modelTurtle, null);
+    }
 
-    public static HDT createLabeledGraph(String modelTurtle)
+    public static Model createLabeledGraph(String modelTurtle, String defaultNamespace)
     {
         Model model = ModelFactory.createDefaultModel();
-        model.setNsPrefix("",NAMESPACE);
 
-        modelTurtle = "@prefix : <" + NAMESPACE + ">\n" + modelTurtle;
+        if( defaultNamespace!=null && !defaultNamespace.isEmpty() ) {
+            model.setNsPrefix("", defaultNamespace);
+            modelTurtle = "@prefix : <" + defaultNamespace + ">\n" + modelTurtle;
+        }
 
         model.read(new ByteArrayInputStream(modelTurtle.getBytes()), null, "TURTLE");
 
-        return createHDT(model);
+        return model;
     }
 
     public static List<Integer> encodeVertices(String[] vertices, Dictionary dict) {
@@ -135,7 +140,7 @@ public class TestUtil {
         }
     }
 
-    private static HDT createHDT(Model model) {
+    public static HDT createHDT(Model model) {
 
         // since HDT Index can only search for subjects, ensure that
         // our target node occurs in a subject position in the graph:
