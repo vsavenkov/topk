@@ -13,7 +13,7 @@ public class TrivialDictionary<K> implements VertexDictionary<K,K>, EdgeDictiona
         }
         return instance;
     }
-    private TrivialDictionary(){
+    protected TrivialDictionary(){
     }
     public K vertexEntry(K key, Edge.Component component) {
         return key;

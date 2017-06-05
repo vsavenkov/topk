@@ -1,40 +1,41 @@
-package at.ac.wu.graphsense.hdt;
+package at.ac.wu.graphsense.search.pathexpr;
 
 import at.ac.wu.graphsense.Edge;
 import at.ac.wu.graphsense.EdgeDictionary;
-import at.ac.wu.graphsense.search.pathexpr.*;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.path.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by Vadim on 08.05.2017.
  */
 public class PathExprFactory {
 
-    public static PathExpr<Integer,Integer> createPathExpr(Path path, EdgeDictionary<Integer,String> ed){
-        PathExprVisitor pev = new PathExprVisitor(ed);
+    public static <V,E> PathExpr<V,E> createPathExpr(Path path, JenaNodeTranslator<E> jnt){
+        PathExprVisitor<V,E> pev = new PathExprVisitor(jnt);
 
         path.visit(pev);
 
         return pev.s.pop();
     }
 
-    static class PathExprVisitor extends org.apache.jena.sparql.path.PathVisitorBase {
+    static class PathExprVisitor<V,E> extends PathVisitorBase {
 
-        Stack<PathExpr<Integer,Integer>> s = new Stack<>();
+        Stack<PathExpr<V,E>> s = new Stack<>();
 
-        EdgeDictionary<Integer,String> ed;
+        JenaNodeTranslator<E> jnt;
 
-        PathExprVisitor(EdgeDictionary<Integer,String> ed){
-            this.ed = ed;
+        PathExprVisitor(JenaNodeTranslator<E> jnt){
+            this.jnt = jnt;
         }
 
         @Override
         public void visit(P_Link p_link) {
-            Integer val = ed.edgeKey(p_link.getNode().getURI());
-            s.push( new Link(val!=null? val : Integer.MAX_VALUE ) );
+            E val = jnt.edgeKey(p_link.getNode());
+            s.push( new Link(val!=null? val : jnt.getImpossibleValue() ) );
         }
 
         @Override
@@ -72,7 +73,7 @@ public class PathExprFactory {
 
         protected void visit1(P_Path1 p1, Integer min, Integer max){
             p1.getSubPath().visit(this);
-            PathExpr<Integer,Integer> pe = s.peek();
+            PathExpr<V,E> pe = s.peek();
             pe.setMinOccurrences(min);
             pe.setMaxOccurrences(max);
         }
@@ -82,11 +83,11 @@ public class PathExprFactory {
             if( null!=p_negPropSet.getBwdNodes() && !p_negPropSet.getBwdNodes().isEmpty() ){
                 throw new UnsupportedOperationException("Inverse properties are not supported.");
             }
-            List<Edge<Integer,Integer>> edges = new LinkedList<>();
+            List<Edge<V,E>> edges = new LinkedList<>();
 
             for(Node n : p_negPropSet.getFwdNodes()  ){
-                Integer val = ed.edgeKey(n.getURI());
-                edges.add(new EdgeInt(null, val));
+                E val = jnt.edgeKey(n);
+                edges.add(new Edge(null, val));
             }
 
             s.push( new NegEdgeSet<>(edges) );
@@ -139,6 +140,11 @@ public class PathExprFactory {
 
         }
          */
+
+    }
+
+    public interface JenaNodeTranslator<E> extends EdgeDictionary<E,Node> {
+        E getImpossibleValue();
     }
 
 }

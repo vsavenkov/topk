@@ -8,7 +8,7 @@ import dk.brics.automaton.RunAutomaton;
 
 import java.util.*;
 
-public abstract class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
+public class RegExpPathArbiter<V,E> implements PathArbiter<V,E> {
 
     Map<E,Character> edgeMap = new HashMap<>();
 
